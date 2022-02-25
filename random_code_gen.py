@@ -15,6 +15,10 @@ Source:
     https://www.programcreek.com/python/example/123648/optimization.create_optimizer
 
     https://www.programcreek.com/python/index/module/?action=index&page=60
+
+    https://www.programcreek.com/scala/?action=index
+
+    https://www.programcreek.com/scala/?action=index&page=60
 '''
 
 # Import necessary modules
@@ -22,7 +26,14 @@ from bs4 import BeautifulSoup
 import urllib
 import random
 
-PYTHON_PAGES_COUNT = 60
+PAGES_COUNT = 60
+
+def get_code_search_base(programming = 'python'):
+
+    if(programming == 'scala'):
+        return "https://www.programcreek.com/scala/"
+        
+    return "https://www.programcreek.com/python/index/module/"
 
 def get_soup_base(address):
 
@@ -30,7 +41,7 @@ def get_soup_base(address):
 
     getRequest  = urllib.request.Request(address, None, {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0'})
     urlfile     = urllib.request.urlopen(getRequest)
-    htmlResult  = urlfile.read(50000)
+    htmlResult  = urlfile.read(200000)
 
     urlfile.close()
 
@@ -51,12 +62,14 @@ def get_random_codelink(soup):
 
     return a_link['href']
 
-def get_info():
+def get_info(programming = 'python'):
 
-    # random_page = random.randint(0, PYTHON_PAGES_COUNT)
-    random_page = 60
+    random_page = random.randint(0, PAGES_COUNT)
+    # random_page = 60
 
-    address     = f"https://www.programcreek.com/python/index/module/?action=index&page={random_page}"
+    code_base = get_code_search_base(programming)
+
+    address     = f"{code_base}?action=index&page={random_page}"
 
     soup = get_soup_base(address)
     link = get_random_codelink(soup)
@@ -79,12 +92,18 @@ def get_info():
     random_box = random.choice(box_list)
     _code = random_box.select_one('div.exampleboxbody').text
 
+    print('Found code:')
+    print('-' * 80)
     print(_code)
+    print('-' * 80)
 
 def startpy():
+    
     print('Hey there')
 
-    get_info()
+    get_info(
+        programming = 'python'
+    )
 
 if __name__ == '__main__':
     startpy()
